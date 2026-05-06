@@ -1,0 +1,668 @@
+//Exercises XP
+//Exercise 1: Creating a Simple Express.js Application with Routes
+Step 2: Install Dependencies
+
+npm install express
+Step 3: Create Your Express Application
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+
+// routes/index.js
+const express = require("express");
+const router = express.Router();
+
+// Define your routes here
+router.get("/", (req, res) => {
+  res.send("Welcome to the homepage!");
+});
+
+router.get("/about", (req, res) => {
+  res.send("About Us page");
+});
+
+// Export the router module
+module.exports = router;
+Step 5: Mount the Router in Your Application
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Import the router module
+const indexRouter = require("./routes/index");
+
+// Mount the router
+app.use("/", indexRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 6: Start Your Server
+
+node app.js
+
+
+//Exercise 2: Simple to-do list exercise using Express.js and express.Router.
+Step 1: Setup
+
+Create a new directory for your project.
+Navigate to the project directory using your command line.
+Initialize a new Node.js project by running npm init -y.
+Step 2: Install Dependencies
+Install Express.js by running the following command:
+
+npm install express
+Step 3: Create Your Express Application
+Create a JavaScript file (e.g., app.js) to set up your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+Inside your project directory, create a new directory called routes. Inside the routes directory, create a JavaScript file (e.g., todos.js) where you will define routes for managing the to-do list using express.Router():
+
+// routes/todos.js
+const express = require("express");
+const router = express.Router();
+
+// Sample in-memory database for storing to-do items
+const todos = [];
+
+// Get all to-do items
+router.get("/", (req, res) => {
+  res.json(todos);
+});
+
+// Add a new to-do item
+router.post("/", (req, res) => {
+  const { task } = req.body;
+  if (!task) {
+    return res.status(400).json({ error: "Task is required" });
+  }
+
+  const newTodo = { id: todos.length + 1, task };
+  todos.push(newTodo);
+  res.status(201).json(newTodo);
+});
+
+// Update a to-do item by ID
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { task } = req.body;
+
+  const todo = todos.find((t) => t.id === parseInt(id));
+  if (!todo) {
+    return res.status(404).json({ error: "To-do not found" });
+  }
+
+  todo.task = task;
+  res.json(todo);
+});
+
+// Delete a to-do item by ID
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  const index = todos.findIndex((t) => t.id === parseInt(id));
+  if (index === -1) {
+    return res.status(404).json({ error: "To-do not found" });
+  }
+
+  todos.splice(index, 1);
+  res.sendStatus(204);
+});
+
+module.exports = router;
+Step 5: Mount the Router in Your Application
+In your app.js file, import the router module you created and mount it in your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Import the router module
+const todosRouter = require("./routes/todos");
+
+// Mount the router
+app.use("/todos", todosRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 6: Start Your Server
+Now, you can start your Express server by running:
+
+node app.js
+Step 7: Test Your API
+You can use tools like Postman or curl to test your API endpoints for managing to-do items:
+
+GET http://localhost:3000/todos (Get all to-do items)
+POST http://localhost:3000/todos (Create a new to-do item with a JSON request body)
+PUT http://localhost:3000/todos/:id (Update a to-do item by ID with a JSON request body)
+DELETE http://localhost:3000/todos/:id (Delete a to-do item by ID)
+This exercise demonstrates a simple to-do list API built using Express.js and express.Router. You can expand on this by adding more features and validation as needed.
+
+
+
+//Exercise 3: Basic API for managing a list of books using Express.js and express.Router.
+Step 1: Setup
+
+Create a new directory for your project.
+Navigate to the project directory using your command line.
+Initialize a new Node.js project by running npm init -y.
+Step 2: Install Dependencies
+Install Express.js by running the following command:
+
+npm install express
+Step 3: Create Your Express Application
+Create a JavaScript file (e.g., app.js) to set up your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+Inside your project directory, create a new directory called routes. Inside the routes directory, create a JavaScript file (e.g., books.js) where you will define routes for managing books using express.Router():
+
+// routes/books.js
+const express = require("express");
+const router = express.Router();
+
+// Sample in-memory database for storing books
+const books = [];
+
+// Get all books
+router.get("/", (req, res) => {
+  res.json(books);
+});
+
+// Add a new book
+router.post("/", (req, res) => {
+  const { title, author } = req.body;
+  if (!title || !author) {
+    return res.status(400).json({ error: "Title and author are required" });
+  }
+
+  const newBook = { id: books.length + 1, title, author };
+  books.push(newBook);
+  res.status(201).json(newBook);
+});
+
+// Update a book by ID
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, author } = req.body;
+
+  const book = books.find((b) => b.id === parseInt(id));
+  if (!book) {
+    return res.status(404).json({ error: "Book not found" });
+  }
+
+  book.title = title;
+  book.author = author;
+  res.json(book);
+});
+
+// Delete a book by ID
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  const index = books.findIndex((b) => b.id === parseInt(id));
+  if (index === -1) {
+    return res.status(404).json({ error: "Book not found" });
+  }
+
+  books.splice(index, 1);
+  res.sendStatus(204);
+});
+
+module.exports = router;
+Step 5: Mount the Router in Your Application
+In your app.js file, import the router module you created and mount it in your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Import the router module
+const booksRouter = require("./routes/books");
+
+// Mount the router
+app.use("/books", booksRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 6: Start Your Server
+Now, you can start your Express server by running:
+
+node app.js
+Step 7: Test Your API
+You can use tools like Postman or curl to test your API endpoints for managing books:
+
+GET http://localhost:3000/books (Get all books)
+POST http://localhost:3000/books (Create a new book with a JSON request body)
+PUT http://localhost:3000/books/:id (Update a book by ID with a JSON request body)
+DELETE http://localhost:3000/books/:id (Delete a book by ID)
+This exercise demonstrates a simple book management API built using Express.js and express.Router.
+
+
+
+//Exercises XP Gold
+//Exercise 1: Create a Blog API with Express.js and express.Router
+//Here’s a basic solution to get you started with the challenge:
+
+Step 1: Setup
+1. Create a new directory for your project.
+2. Navigate to the project directory using your command line.
+3. Initialize a new Node.js project by running npm init -y.
+
+Step 2: Install Dependencies
+Install Express.js by running the following command:
+
+npm install express
+Step 3: Create Your Express Application
+Create a JavaScript file (e.g., app.js) to set up your Express application:
+
+// app.js
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+Inside your project directory, create a new directory called routes. Inside the routes directory, create a JavaScript file (e.g., blog.js) where you will define routes for managing blog posts using express.Router():
+
+// routes/blog.js
+const express = require('express');
+const router = express.Router();
+
+// Sample in-memory database for storing blog posts
+const posts = [];
+
+// Get all blog posts
+router.get('/', (req, res) => {
+  res.json(posts);
+});
+
+// Get a specific blog post by ID
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  const post = posts.find((p) => p.id === parseInt(id));
+
+  if (!post) {
+    return res.status(404).json({ error: 'Post not found' });
+  }
+
+  res.json(post);
+});
+
+// Create a new blog post
+router.post('/', (req, res) => {
+  const { title, content } = req.body;
+  if (!title || !content) {
+    return res.status(400).json({ error: 'Title and content are required' });
+  }
+
+  const newPost = { id: posts.length + 1, title, content, timestamp: new Date() };
+  posts.push(newPost);
+  res.status(201).json(newPost);
+});
+
+// Update a blog post by ID
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+
+  const post = posts.find((p) => p.id === parseInt(id));
+  if (!post) {
+    return res.status(404).json({ error: 'Post not found' });
+  }
+
+  post.title = title;
+  post.content = content;
+  res.json(post);
+});
+
+// Delete a blog post by ID
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  const index = posts.findIndex((p) => p.id === parseInt(id));
+  if (index === -1) {
+    return res.status(404).json({ error: 'Post not found' });
+  }
+
+  posts.splice(index, 1);
+  res.sendStatus(204);
+});
+
+module.exports = router;
+Step 5: Mount the Router in Your Application
+In your app.js file, import the router module you created and mount it in your Express application:
+
+// app.js
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Import the router module
+const blogRouter = require('./routes/blog');
+
+// Mount the router
+app.use('/posts', blogRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 6: Start Your Server
+Now, you can start your Express server by running:
+
+node app.js
+Step 7: Test Your API
+You can use tools like Postman or curl to test your API endpoints for managing blog posts:
+
+GET http://localhost:3000/posts (Get all blog posts)
+GET http://localhost:3000/posts/:id (Get a specific blog post by ID)
+POST http://localhost:3000/posts (Create a new blog post with a JSON request body)
+PUT http://localhost:3000/posts/:id (Update a blog post by ID with a JSON request body)
+DELETE http://localhost:3000/posts/:id (Delete a blog post by ID)
+This challenge will help you practice building a simple blog API using Express.js and express.Router. You can expand on this challenge by adding more features such as user authentication, database integration, and pagination as you become more familiar with Express.js.
+
+
+
+//Exercises XP Ninja
+//Exercise 1: Create an Emoji Greeting App with Express.js and express.Router
+Step 1: Setup
+
+Create a new directory for your project.
+Navigate to the project directory using your command line.
+Initialize a new Node.js project by running npm init -y.
+Step 2: Install Dependencies
+Install Express.js by running the following command:
+
+npm install express
+Step 3: Create Your Express Application
+Create a JavaScript file (e.g., app.js) to set up your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing form data
+app.use(express.urlencoded({ extended: true }));
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+Inside your project directory, create a new directory called routes. Inside the routes directory, create a JavaScript file (e.g., greeting.js) where you will define routes for the Emoji Greeting app using express.Router():
+
+// routes/greeting.js
+const express = require("express");
+const router = express.Router();
+
+// List of available emojis
+const emojis = ["😀", "🎉", "🌟", "🎈", "👋"];
+
+// Display the greeting form
+router.get("/", (req, res) => {
+  res.render("greeting-form", { emojis });
+});
+
+// Process the form submission
+router.post("/greet", (req, res) => {
+  const { name, emoji } = req.body;
+
+  if (!name) {
+    res.render("greeting-form", { emojis, error: "Name is required" });
+  } else {
+    const greeting = `Hello, ${name} ${emoji}!`;
+    res.render("greeting", { greeting });
+  }
+});
+
+module.exports = router;
+Step 5: Create Views
+Inside your project directory, create a new directory called views. Inside the views directory, create two HTML files: greeting-form.ejs and greeting.ejs. These files will be used to render the greeting form and the personalized greeting page:
+
+<!-- views/greeting-form.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Emoji Greeting</title>
+  </head>
+  <body>
+    <h1>Emoji Greeting</h1>
+    <% if (error) { %>
+    <p><%= error %></p>
+    <% } %>
+    <form action="/greet" method="POST">
+      <label for="name">Your Name:</label>
+      <input type="text" name="name" id="name" required />
+      <label for="emoji">Choose an Emoji:</label>
+      <select name="emoji" id="emoji">
+        <% emojis.forEach(e => { %>
+        <option value="<%= e %>"><%= e %></option>
+        <% }) %>
+      </select>
+      <button type="submit">Generate Greeting</button>
+    </form>
+  </body>
+</html>
+<!-- views/greeting.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Emoji Greeting</title>
+  </head>
+  <body>
+    <h1>Emoji Greeting</h1>
+    <p><%= greeting %></p>
+    <a href="/">Generate Another Greeting</a>
+  </body>
+</html>
+Step 6: Mount the Router in Your Application
+In your app.js file, import the router module you created, set up the view engine, and mount the router in your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing form data
+app.use(express.urlencoded({ extended: true }));
+
+// Set up view engine (EJS)
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+// Import the router module
+const greetingRouter = require("./routes/greeting");
+
+// Mount the router
+app.use("/", greetingRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 7: Start Your Server
+Now, you can start your Express server by running:
+
+node app.js
+Step 8: Access the Emoji Greeting App
+Open your web browser and navigate to http://localhost:3000/ to access the Emoji Greeting app. You can enter your name, choose an emoji, and click the “Generate Greeting” button to see your personalized greeting.
+
+This daily challenge demonstrates a simple Emoji Greeting app built using Express.js and express.Router.
+
+
+
+Daily Challenge : Create a Trivia Quiz Game with Express.js and express.Router
+Step 1: Setup
+
+Create a new directory for your project.
+Navigate to the project directory using your command line.
+Initialize a new Node.js project by running npm init -y.
+Step 2: Install Dependencies
+Install Express.js by running the following command:
+
+npm install express
+Step 3: Create Your Express Application
+Create a JavaScript file (e.g., app.js) to set up your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Your code for setting up routes will go here
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 4: Create a Router Module
+Inside your project directory, create a new directory called routes. Inside the routes directory, create a JavaScript file (e.g., quiz.js) where you will define routes for the trivia quiz game using express.Router():
+
+// routes/quiz.js
+const express = require("express");
+const router = express.Router();
+
+// Sample trivia quiz questions and answers (hard-coded for simplicity)
+const triviaQuestions = [
+  {
+    question: "What is the capital of France?",
+    answer: "Paris",
+  },
+  {
+    question: "Which planet is known as the Red Planet?",
+    answer: "Mars",
+  },
+  {
+    question: "What is the largest mammal in the world?",
+    answer: "Blue whale",
+  },
+];
+
+// Initialize quiz state
+let currentQuestionIndex = 0;
+let userScore = 0;
+
+// Get the current question
+router.get("/", (req, res) => {
+  if (currentQuestionIndex < triviaQuestions.length) {
+    const question = triviaQuestions[currentQuestionIndex].question;
+    res.json({ question });
+  } else {
+    res.json({ message: "Quiz completed" });
+  }
+});
+
+// Submit an answer to the current question
+router.post("/", (req, res) => {
+  const { answer } = req.body;
+  const currentQuestion = triviaQuestions[currentQuestionIndex];
+
+  if (!currentQuestion) {
+    return res.status(400).json({ error: "Quiz completed" });
+  }
+
+  if (answer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+    userScore++;
+  }
+
+  currentQuestionIndex++;
+
+  res.json({ message: "Answer submitted" });
+});
+
+// Get the user's final score
+router.get("/score", (req, res) => {
+  res.json({ score: userScore });
+});
+
+module.exports = router;
+Step 5: Mount the Router in Your Application
+In your app.js file, import the router module you created and mount it in your Express application:
+
+// app.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+// Middleware for parsing JSON request bodies
+app.use(express.json());
+
+// Import the router module
+const quizRouter = require("./routes/quiz");
+
+// Mount the router
+app.use("/quiz", quizRouter);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+Step 6: Start Your Server
+Now, you can start your Express server by running:
+
+node app.js
+Step 7: Play the Quiz
+You can use tools like Postman or curl to interact with the quiz API:
+
+GET http://localhost:3000/quiz (Start the quiz and display the first question)
+POST http://localhost:3000/quiz (Submit an answer to the current question and move to the next question)
+GET http://localhost:3000/quiz/score (Get the user’s final score at the end of the quiz)
+This challenge will help you practice building a simple trivia quiz game using Express.js and express.Router.
